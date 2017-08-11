@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Doodlepad</title>
+	<link rel="shortcut icon" href="favicon.ico">  
+    <link rel="icon" type="image/ico" href="favicon.ico">
+
+<style>
+*{
+	margin:0;
+	-webkit-user-select: none;
+	font-family: arial;
+}
+canvas{
+	cursor: crosshair;
+	border:black solid 1px;
+ }
+
+a{
+	font-size:16px;
+	text-decoration:none;
+	background:darkblue;
+	color:#fff;
+	padding:5px;
+ }
+
+#clr div{
+	cursor:pointer;
+	cursor:hand;
+	width:10px;
+	height:20px;
+	float:left;
+}
+img{
+ height:100px;
+ width:100px;
+ border:1px red solid;
+ margin-left:2px;
+ background:none;
+}
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}
+#nav li{list-style:none}
+#nav{height:16px;margin-bottom:0px;
+font-family: arial;
+}#nav
+ul{float:right}
+#nav
+li{float:left;width:60px;text-align:center;border-left:1px solid #fff}
+#nav
+li a{display:block;color:#fff;font-size:85%;text-decoration:none;text-transform:uppercase;font-weight:normal;line-height:16px}
+#nav li.selected a{background-color:#000}
+#nav li a:hover{background-color:#333}
+
+
+
+</style>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript" ></script>
+
+<script type="text/javascript" >
+//set drawmode false
+var _x,_y;
+function getQuerystring(key, default_){
+	if (default_== null){
+    	default_= null;
+	}
+	var search = unescape(location.search);
+	if (search == ""){
+    	return default_;
+	}
+	search = search.substr(1);
+	var params = search.split("&");
+	for (var i = 0; i < params.length; i++){
+    	var pairs = params[i].split("=");
+    	if(pairs[0] == key){
+        		return pairs[1];
+    	}
+	}
+	return default_;
+}
+function supports_canvas() {
+	 return !!document.createElement('canvas').getContext;
+}
+
+function supports_html5() {
+	 return !!document.createElement('canvas').toDataURL;
+}
+var host = getQuerystring("host");
+var file = getQuerystring("file");
+var error = getQuerystring("error");
+var uid = window.opener.fc_chat.uid;	
+var uid2 = getQuerystring("uid");
+var dest = getQuerystring("dest");
+
+if(error||file){
+	if(error){
+		alert(window.opener.fc_chat.textSetter(302,'Sorry, there was an error saving your note'));
+	}
+	if(file){
+		window.opener.fc_chat.p_note(dest,uid2,file);
+	}
+	window.close();
+}
+
+$(document).ready(function() {
+
+		var draw= false;
+		var x, y = '';
+
+		var canvas = document.getElementById("can");
+		var ctx = canvas.getContext("2d");
+		ctx.strokeStyle = 'red';
+
+		ctx.lineWidth = 2;
+		ctx.lineCap = "round";
+		ctx.fillStyle = "#fff";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+		//set it true on mousedown
+		$("#can").mousedown(function(e){draw=true;
+		            ctx.beginPath();
+					ctx.moveTo(e.pageX,e.pageY);
+					ctx.lineTo(e.pageX+0.1,e.pageY+0.1);
+					ctx.stroke();
+					_x = e.pageX;
+					_y = e.pageY;
+					});
+		//reset it on mouseup
+		$("#can").mouseup(function(){draw=false;});
+
+		$("#can").mousemove(function(e) {
+			if(draw==true){
+					
+					ctx.beginPath();
+					ctx.moveTo(_x,_y);
+					ctx.lineTo(e.pageX+1,e.pageY-+1);
+					ctx.stroke();
+					_x = e.pageX;
+					_y = e.pageY;
+			}	
+
+		});
+        
+		//code for color pallete
+		$("#clr > div").click(
+		function(){
+				ctx.lineWidth = 2;
+				ctx.strokeStyle = $(this).css("background-color");
+		});
+        
+        //Eraser
+		$("#eraser").click(function(){
+			ctx.lineWidth = 15;
+			ctx.strokeStyle = '#fff';
+		});
+
+		//Code for save the image
+		$("#save").click(function(){ 
+			$("#data").val(canvas.toDataURL());
+			$("#can").css("display","none");
+			$("#snd").css("display","block");
+			$("#frm").trigger('submit');
+		});
+        
+		//Clear 
+		$("#clear").click(function(){
+				 ctx.fillStyle = "#fff";
+				 ctx.fillRect(0, 0, canvas.width, canvas.height);
+				 ctx.strokeStyle = 'red';
+				 ctx.fillStyle = "red";
+			}
+			);
+	   
+	   
+});
+
+
+</script>
+</head>
+<body body='background-color:#eeeeee'>
+<script>
+if(!supports_html5()||!supports_canvas()){
+	document.write('<center><div style="padding:15px;margin-top:190px;font-family:arial">' + window.opener.fc_chat.textSetter(301,'You have been caught using an outdated browser. Please upgrade to a modern browser in order to use the doodlepad') + '</div></center>');
+}else{
+	var sendMsg='';
+	var sendMsgAfter='';
+	if(dest==0){
+		sendMsg = window.opener.fc_chat.textSetter(300,'to Room');
+		sendMsgAfter=window.opener.fc_chat.textSetter(305,'Your doodle will be sent to the chat room. To send a doodle to a user, click on the user\'s name, and then click on the "Send a doodle" icon.');
+	}
+	if(dest==1){
+		sendMsg = window.opener.fc_chat.textSetter(600,'to the Page Discussion');
+		sendMsgAfter=window.opener.fc_chat.textSetter(600,'Your doodle will be sent to the page discussion. To send a doodle to a user, click on the user\'s name, and then click on the "Send a doodle" icon.');
+	}
+	
+	document.write('<center><div id="snd" style="display:none;padding:15px;margin-top:190px;font-family:arial"><b>' + window.opener.fc_chat.textSetter(306,'Sending...') + '</b></div></center>'+
+				'<canvas id="can" width="648" height="370" style="position:absolute;top:0px;left:0px;border:1px solid black">'+
+				'</canvas>'+
+				'<div style="position:absolute;top:390px;left:10px">'+
+				'<a id="save" href="#">' + window.opener.fc_chat.textSetter(297,'Send') +' '+ sendMsg +'</a>'+
+				'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+				'<a href="#" id="clear" >' + window.opener.fc_chat.textSetter(298,'Clear') + '</a>'+
+				'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+				'<a id="eraser" href="#">' + window.opener.fc_chat.textSetter(299,'Eraser') + '</a>'+
+				'</div>'+
+				'<div id="clr" style="position:absolute;top:390px;left:400px">'+
+				'<div style="background-color:black;"> </div>'+
+				'<div style="background-color:red;"> </div>'+
+				'<div style="background-color:green;"> </div>'+
+				
+				'<div style="background-color:orange;"> </div>'+
+				'<div style="background-color:brown;"> </div>'+
+				'<div style="background-color:#d2232a;"> </div>'+
+				'<div style="background-color:#fcb017;"> </div>'+
+				'<div style="background-color:#fff460;"> </div>'+
+				'<div style="background-color:#9ecc3b;"> </div>'+
+				'<div style="background-color:#fcb017;"> </div>'+
+				'<div style="background-color:#fff460;"> </div>'+
+				'<div style="background-color:#F43059;"> </div>'+
+				
+				'<div style="background-color:#82B82C;"> </div>'+
+				'<div style="background-color:#0099FF;"> </div>'+
+				'<div style="background-color:#ff00ff;"> </div>'+
+				'</div>' +
+				'<div style="position:absolute;top:420px;left:10px;font-family:arial">'+
+				sendMsgAfter +
+				'</div>'+
+				'<br /><br />'+
+				
+				'<form action="http://www.fastcatsoftware.com/plugins/notepad/savenote.aspx?dest='+dest+'&uid='+uid+'&uid2='+uid2+'&host='+host+'" method="post" id="frm"/>'+
+				'<input type="hidden" name="data" id="data" />'+
+				'</form>');
+}
+</script>
+</body>
+</html>

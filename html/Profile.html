@@ -1,0 +1,256 @@
+<!-- This is a default profile page. Feel free to customize it any way you like. -->
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<TITLE>Profile Page</TITLE>
+<style>
+BODY {background-color: #eeeeee;font-family:arial; font-size:12}
+div.infobox {
+padding:10px;margin-top:3px;width:360px;border:1px solid gray;color:#444444;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius:5px;
+background: #ccc; /* for non-css3 browsers */
+//filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#cccccc'); /* for IE */
+background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc)); /* for webkit browsers */
+background: -moz-linear-gradient(top,  #eee,  #ccc); /* for firefox 3.6+ */
+}
+</style>
+
+<script>
+var style = window.parent.FCChatConfig.styles.profile;
+var insave=false;
+
+function $(u){
+	return document.getElementById(u)
+};
+
+function escapeChars(s){
+	s = s.replace(/%/g, '%25');
+    s = s.replace(/&/g, '%26amp;');
+    s = s.replace(/</g, '%26lt;');
+    s = s.replace(/>/g, '%26gt;');
+    s = s.replace(/\\/g, '\\\\');
+    return s;
+};
+function unescapeChars(s){
+	 s = s.replace(/%26/g, '&');
+     s = s.replace(/%25/g, '%');
+     return s;
+};
+function unescapemore(s){
+	s = s.replace(/&amp;/g, '&');
+    s = s.replace(/&lt;/g, '<');
+    s = s.replace(/&gt;/g, '>');
+    return s;
+};
+function numbersonly(myfield, e, dec){
+	var key;
+	var keychar;
+	
+	if (window.event)
+	   key = window.event.keyCode;
+	else if (e)
+	   key = e.which;
+	else
+	   return true;
+	keychar = String.fromCharCode(key);
+	
+	// control keys
+	if ((key==null) || (key==0) || (key==8) || 
+	    (key==9) || (key==13) || (key==27) )
+	   return true;
+	
+	// numbers
+	else if ((("0123456789").indexOf(keychar) > -1))
+	   return true;
+	
+	// decimal point jump
+	else if (dec && (keychar == "."))
+	   {
+	   myfield.form.elements[dec].focus();
+	   return false;
+	   }
+	else
+	   return false;
+};
+function saveProfile(){
+	$('saving').style.color=style.textColor.saving;
+	$('saving').innerHTML=window.parent.fc_chat.textSetter(221);
+	var age = parseInt($('agetxt').value.substr(0,3));
+	if(isNaN(age))age=0;
+	var sex = 0;
+	var male = $('sexradio1').checked;
+	var female = $('sexradio2').checked;
+	var location = escapeChars($('locationtxt').value.substr(0,50));
+	var aboutme = escapeChars($('aboutmetxt').value.substr(0,500));
+	if(male){
+		sex=1;
+	}else if(female){
+		sex=2;
+	}	
+	if(age == 0){
+		age='   ';
+	}else if(age < 10) {
+        age = '  ' + age;
+    }else if(age < 100) {
+        age = ' ' + age;
+    }
+	window.parent.fc_chat.createUP(sex+ '' + age + '' + location + '%%' + aboutme,finishedSaving);
+	insave=true;
+};
+function finishedSaving(user){
+	if(insave){
+		$('saving').style.color=style.textColor.saved;
+		$('saving').innerHTML=window.parent.fc_chat.textSetter(222);
+		insave=false;
+	}
+};
+function writeProfile(user,profile){
+	if(profile.length>0&&user==args['u']){
+		var age='?';
+		var sex='?';
+		var location='?';
+		var aboutme='';
+		if(profile.length>=4){
+			sex=profile.substr(0,1);
+			if(sex=='1'){
+				$('sexradio1').checked=true;
+				$('sex').innerHTML=window.parent.fc_chat.textSetter(214);
+			}else if(sex=='2'){
+				$('sexradio2').checked=true;
+				$('sex').innerHTML=window.parent.fc_chat.textSetter(215);
+			}
+			age=profile.substr(1,3).replace(/^\s*/, "").replace(/\s*$/, "");
+			age=(age==''?'?':age);
+			if(profile.length>4){
+				var remainder = profile.substr(4).split('%%');
+				location = unescapeChars(remainder[0]);
+				location=(location==''?'?':location);
+				if(remainder.length>1){
+					aboutme = unescapeChars(remainder[1]);
+				}
+			}
+		}
+		$('age').innerHTML=age;
+		$('agetxt').value=(age=='?'?'':age);
+		$('location').innerHTML=location;;
+		$('locationtxt').value=(location=='?'?'':unescapemore(location));;
+		$('aboutme').innerHTML=(aboutme==''?'&nbsp;':aboutme);
+		$('aboutmetxt').value=unescapemore(aboutme);
+		if(args['own']=='1'||args['mod']=='1'){
+			$('editprofile').style.display='block';
+		}else{
+			$('displayprofile').style.display='block';
+		}
+		if(profile=='0'){
+			$('noprofile').style.display='inline';
+		}
+		$('loading').style.display='none';
+	}
+};
+function getArgs() {
+	var args = new Object();
+	var search = unescape(location.search);
+	var query = search.substring(1);
+	query.replace(/</g, '&lt;');
+	query.replace(/>/g, '&gt;');
+	var pairs = query.split("&");
+	for(var i = 0; i < pairs.length; i++) {
+		var pos = pairs[i].indexOf('=');
+		if (pos == -1) continue;
+		var argname = pairs[i].substring(0,pos);
+		var value = pairs[i].substring(pos+1);
+		value=decodeURIComponent(escape(value));
+		args[argname] = value; //unescapeChars(value);
+	}
+	return args;
+}
+var args = getArgs();
+</script>
+</HEAD>
+<BODY id='body1'>
+<br>
+<script>document.write('<div style="border-bottom: '+style.separator+';font-size:16px;color:'+style.textColor.title+'"><b><i>'+window.parent.fc_chat.textSetter(207)+'</i></b></div>')</script>
+<br>
+<script>
+document.write("<div style='width:360px'><img src='" + args['loc'].replace(/\|\|period\|\|/g, '.').replace(/\|\|protocol\|\|/g, 'http') + "' border=0>&nbsp;")
+document.write("<b>" + args['nm'] + "&nbsp;&nbsp;&nbsp;" +(args['g']=='0'?"<span id='loading' style='color:"+style.textColor.loading+";font-style:italic'>("+window.parent.fc_chat.textSetter(208)+")</span>":"") + "</b></div><br>");
+</script>
+
+<div id='displayprofile' style='display:none'>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(213))</script></b></span>
+<div id='age' class='infobox' style='font-weight:bold;'>
+?
+</div>
+<br>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(216))</script></b></span>
+<div id='sex' class='infobox' style='font-weight:bold;'>
+?
+</div>
+<br>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(217))</script></b></span>
+<div id='location' class='infobox' style='font-weight:bold;'>
+?
+</div>
+<br>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(218))</script></b></span>
+<div id='aboutme' class='infobox' style='font-weight:bold;'>
+&nbsp;
+</div>
+<br><br>
+<span id='noprofile' style='display:none;font-weight:bold;font-style:italic'><script>document.write(window.parent.fc_chat.textSetter(209))</script>
+</span>
+&nbsp;<a href='javascript:window.parent.fc_chat.rem()'><script>document.write(window.parent.fc_chat.textSetter(223))</script></a>
+</div>
+
+<div id='editprofile' style='display:none'>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(213))</script></b></span>
+<div id='edage' class='infobox'>
+<input id='agetxt' type='text' size='3' maxlength='3' onKeyPress="return numbersonly(this, event)">
+</div>
+<br>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(216))</script></b></span>
+<div id='edsex' class='infobox'>
+<script>document.write(window.parent.fc_chat.textSetter(214))</script> <INPUT TYPE=radio  id='sexradio1' name='sexradio' VALUE='1'> <script>document.write(window.parent.fc_chat.textSetter(215))</script> <INPUT TYPE=radio  id='sexradio2' name='sexradio' VALUE='2'>
+</div>
+<br>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(217))</script></b> (50 <script>document.write(window.parent.fc_chat.textSetter(219))</script>)</span>
+<div id='edlocation' class='infobox'>
+<input id='locationtxt' type='text' size='30' maxlength='50' >
+</div>
+<br>
+<span style='font-style:italic'><b><script>document.write(window.parent.fc_chat.textSetter(218))</script></b> (500 <script>document.write(window.parent.fc_chat.textSetter(219))</script>)</span>
+<div id='edaboutme' class='infobox'>
+<textarea id='aboutmetxt'  style='margin-right:5px;width:340px;height:50px'></textarea>
+</div>
+<br>
+<input id='saveprofile' type='button' name='saveprofile' value='' Onclick='saveProfile()'>
+<script>document.getElementById("saveprofile").value=window.parent.fc_chat.textSetter(220)</script>
+&nbsp;&nbsp;<span id='saving' style='font-weight:bold;font-style:italic'></span>
+<br><br><center><a href='javascript:window.parent.fc_chat.rem()'><script>document.write(window.parent.fc_chat.textSetter(223))</script></a></center>
+</div>
+
+<div id='guest' style='display:none'>
+<br><br><span ><script>document.write(window.parent.fc_chat.textSetter(210))</script>.</span> &nbsp;<a href='javascript:window.parent.fc_chat.rem()'><script>document.write(window.parent.fc_chat.textSetter(223))</script></a>
+</div>
+
+<div id='ownguest' style='display:none'>
+<br><br><span ><script>document.write(window.parent.fc_chat.textSetter(211))</script>.</span> &nbsp;<a href='javascript:window.parent.fc_chat.rem()'><script>document.write(window.parent.fc_chat.textSetter(223))</script></a>
+</div>
+
+<script>
+$('body1').style.backgroundColor=style.background;
+$('body1').style.color=style.textColor.main;
+
+
+if(args['g']=='0'){
+	var profile = window.parent.fc_chat.loadUP(args['u'],writeProfile);
+	writeProfile(args['u'],profile);
+}else{
+	if(args['own']=='1'){
+		$('ownguest').style.display='block';
+	}else{
+		$('guest').style.display='block';
+	}
+}
+</script>
+</BODY>
+</HTML>

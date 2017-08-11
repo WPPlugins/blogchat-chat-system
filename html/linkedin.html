@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript" >
+
+function getQuerystring(key, default_){
+	if (default_== null){
+    	default_= null;
+	}
+	var search = unescape(location.search);
+	if (search == ""){
+    	return default_;
+	}
+	search = search.substr(1);
+	var params = search.split("&");
+	for (var i = 0; i < params.length; i++){
+    	var pairs = params[i].split("=");
+    	if(pairs[0] == key){
+        		return pairs[1];
+    	}
+	}
+	return default_;
+}
+
+var url = getQuerystring("url");
+</script>
+<script src="http://platform.linkedin.com/in.js" type="text/javascript"></script>
+<script>
+	document.write("<scrip" + "t type='IN/Share' data-url='"+url+"'  data-counter='right'></scrip" + "t>");
+</script>
+</body>
+</html>

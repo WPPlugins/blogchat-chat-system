@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript" >
+
+function getQuerystring(key, default_){
+	if (default_== null){
+    	default_= null;
+	}
+	var search = unescape(location.search);
+	if (search == ""){
+    	return default_;
+	}
+	search = search.substr(1);
+	var params = search.split("&");
+	for (var i = 0; i < params.length; i++){
+    	var pairs = params[i].split("=");
+    	if(pairs[0] == key){
+        		return pairs[1];
+    	}
+	}
+	return default_;
+}
+
+var url = getQuerystring("url");
+(function() {
+	var s = document.createElement('SCRIPT'), s1 = document.getElementsByTagName('SCRIPT')[0];
+	s.type = 'text/javascript';
+	s.async = true;
+	s.src = 'http://widgets.digg.com/buttons.js';
+	s1.parentNode.insertBefore(s, s1);
+})();
+document.write("<a class='DiggThisButton DiggCompact' href='"+url+"'></a>");
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+document.write("<div id='jGo_app' class='jGo_myapp'>" +
+					"<div id='fastcatchatentry' class='jGo_app jGo_myapp' style='position:absolute;display:"+(!FCChatConfig.absolute_positioning&&FCChatConfig.control_visible?"block":"none")+";width:"+FCChatConfig.styles.widget.control.width+"px;height:"+FCChatConfig.styles.widget.control.height+"px'>&nbsp;</div>"+((!FCChatConfig.absolute_positioning&&FCChatConfig.control_visible)?"<div id='fastcatchatdummy' style='margin:"+FCChatConfig.control_padding+";width:"+FCChatConfig.styles.widget.control.width+"px;height:"+FCChatConfig.styles.widget.control.height+"px'>&nbsp;</div>":"")+
+			   "</div>");

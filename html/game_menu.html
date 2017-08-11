@@ -1,0 +1,133 @@
+﻿<html><title>Two Player Games</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi">
+    </script>
+    <script type="text/javascript">
+    function getQuerystring(key, default_){
+    	if (default_== null){
+        	default_= null;
+    	}
+    	var search = unescape(location.search);
+    	if (search == ""){
+        	return default_;
+    	}
+    	search = search.substr(1);
+    	var params = search.split("&");
+    	for (var i = 0; i < params.length; i++){
+        	var pairs = params[i].split("=");
+        	if(pairs[0] == key){
+            		return pairs[1];
+        	}
+    	}
+    	return default_;
+    }
+    function launchGame(id,count){
+    	var dimx=game_dim["G"+id][0];
+    	var dimy=game_dim["G"+id][1];
+    	var vars = id+","+dimx+","+dimy;
+    	if(window.opener&&window.opener.fc_chat){
+    		window.opener.fc_chat.inv_game(uid2,vars,gameArray[count].replace(/%/g, '%25').replace(/&/g, '%26amp;').replace(/</g, '%26lt;').replace(/>/g, '%26gt;').replace(/\\/g, '\\\\'));
+    	}
+    	$("#games").css("display","none");
+    	$("#selectedgame").html(gameArray[count])
+		$("#snd").css("display","block");
+    	setTimeout("closeWindow()",5000);
+    }
+    function closeWindow(){
+    	window.close();
+    }
+    var games = window.opener.fc_chat.textSetter(332,"Chess,Backgammon,Eight ball,Domino Battle,Darts,Checkers,Snooker,Back2Back Tactics,Russian Roulette,Coiny Coins,Poker,Four-In-A-Row,Brilliant turn,Marbles,Super Star Balls,Ramble Scramble,Reversi,Tic-Tac-Toe,Step Race,BattleShips,Zex Lex Duel,Cheat,Speed Chess,Nine-ball,MineSweeper,Monsters Vs Marines,Love & Hate,Hex Empire,Sheep me,4-In-A-Row - Luminati!,Go,Two Crowns,Kaban Tactics,Mancala,GoldMiner,Simon,Libra Battle,Sudoku War");
+    var gameArray = games.split(",");	
+    var uid2 = getQuerystring("uid2");
+    document.title="Invite " + decodeURIComponent(escape(getQuerystring("nm"))) + " to play a game.";
+    var game_dim = {
+    		"G2":[700,505],
+    		"G1":[700,485],
+    		"G256":[700,525],
+    		"G325":[500,400],
+    		"G86":[700,400],
+    		"G6":[700,505],
+    	    "G254":[700,525],
+    	    "G1822":[550,495],
+    	    "G607":[630,480],
+    	    "G1723":[620,480],
+    	   	"G225":[700,540],	
+   	   		"G4":[545,505],
+    		"G1607":[620,485],
+    		"G102":[650,430],
+    		"G327":[700,470],
+    		"G274":[700,450],
+    		"G3":[680,485],
+    		"G26":[470,440],
+    	    "G6346":[560,515],
+    	    "G562":[630,437],
+    	    "G1840":[670,545],
+    	    "G557":[645,485],
+    	    "G29":[550,505],
+    	   	"G255":[720,515],	
+  	   		"G272":[465,375],
+    		"G2227":[715,470],
+    		"G5286":[715,510],
+    		"G567":[650,470],
+    		"G15":[560,505],
+    	    "G1658":[700,605],
+    	    "G64":[635,505],
+    	    "G3177":[715,440],
+    	    "G330":[485,325],
+    	   	"G329":[635,440],	
+   			"G273":[500,435],
+   			"G11":[550,465],
+   			"G1661":[700,566],
+   			"G12":[550,505]
+    }
+    </script>
+	<style>
+		*{
+			margin:0;
+			-webkit-user-select: none;
+			font-family: arial;
+		}
+		
+		a.button{
+			font-size:16px;
+			text-decoration:none;
+			background:darkblue;
+			color:#fff;
+			padding:5px;
+		 }
+	</style>
+  </head>
+  <body style='padding:10px'>
+    <div style='padding:5px;background-color:darkred;color:white;font-family:arial;font-size:16px;'><b><script>document.write(window.opener.fc_chat.textSetter(331,'Select a Game:'));</script></b></div><br><br>
+    <center><div id="snd" style="display:none;padding:15px;margin-top:110px;font-family:arial"><b><span style='color:darkblue;font-size:20px' id='selectedgame'></span><br><br></span><script>document.write(window.opener.fc_chat.textSetter(339,'Sending Invitation...<br><br>You will be prompted to begin play after the other party has accepted the invitation. This window will close momentarily...'))</script></b></div></center>
+    <div id='games' style='display:block;padding:10px;font-family:arial;font-size:16px;margin-top:20px'>
+    <script>
+    	var fill='<table style="width:100%"><tr><td><ul>';
+	    var column1Size , column2Size , column3Size;
+	    column1Size = column2Size = column3Size= Math.floor(gameArray.length/3);
+	    var remainder = gameArray.length%3;
+	    column1Size += (remainder>0?1:0);
+	    column2Size += (remainder>1?1:0);
+	    var count=0;
+	    for (var i=0;i<column1Size;i++) {
+	    	fill += '<li><a href="javascript:launchGame(\''+window.opener.FCChatConfig.game_ids[count]+'\','+count+')" style="text-decoration:none">'+gameArray[count]+'</a></li> ';
+	    	count++;
+    	}
+	    fill+="</ul></td><td><ul>";
+	    for (var i=0;i<column2Size;i++) {
+	    	fill += '<li><a href="javascript:launchGame(\''+window.opener.FCChatConfig.game_ids[count]+'\','+count+')" style="text-decoration:none">'+gameArray[count]+'</a></li> ';
+	    	count++;
+    	}
+	    fill+="</ul></td><td><ul>";
+	    for (var i=0;i<column3Size;i++) {
+	    	fill += '<li><a href="javascript:launchGame(\''+window.opener.FCChatConfig.game_ids[count]+'\','+count+')" style="text-decoration:none">'+gameArray[count]+'</a></li> ';
+	    	count++;
+    	}
+	    fill+='</ul></td></tr></table>'
+    	document.write(fill);
+    </script>
+    </div>
+   </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+<script>var fc_chat_path = "";</script>
+<script type="text/javascript" src="../js/import.google.loader.js"></script><script type="text/javascript" src="../js/import.config.js"></script>
+
+<script type="text/javascript">
+if(FCChatConfig['proxy_type']){
+document.write("<script type='text/javascript' src='../proxies/" + FCChatConfig['proxy_type'] + "_config_proxy.php'></" + "script>");
+}
+</script>
+<script type="text/javascript" src="../js/import.libs.js"></script><script type="text/javascript" src="../js/import.includes.js"></script>
+
+<script type="text/javascript">
+<!--
+var fc_pop_up=true;
+document.documentElement.style.overflow= 'hidden';
+
+function getQuerystring(key, default_){
+    	if (default_== null){
+        	default_= null;
+    	}
+    	var search = unescape(location.search);
+    	if (search == ""){
+        	return default_;
+    	}
+   	search = search.substr(1);
+    	var params = search.split("&");
+    	for (var i = 0; i < params.length; i++){
+        	var pairs = params[i].split("=");
+        	if(pairs[0] == key){
+            		return pairs[1];
+        	}
+    	}
+    	return default_;
+}
+FCChatConfig.chat_id = getQuerystring("cid") || FCChatConfig.chat_id;
+FCChatConfig.host = getQuerystring("h") || FCChatConfig.host;
+FCChatConfig.window_height_offset=0;
+FCChatConfig.chat_room_height_offset=0;
+FCChatConfig.absolute_positioning=true;
+FCChatConfig.styles.widget.control.top=0;
+FCChatConfig.styles.widget.control.left=0;
+FCChatConfig.styles.widget.control.css="display:none;";
+jGo.fcchat_toolbar.style.css="display:none;";
+
+//-->
+</script>
+</head>
+<body style='background-color:#c3c3c3'>
+<script type="text/javascript" src="../js/install.prep.adv.js"></script>
+<script type="text/javascript" src="../js/embed.js"></script> 
+<div id='popup_box_header' style='font-family:arial;position:absolute;display:none;font-weight:bold'></div>
+<script type="text/javascript">document.write((true?FCChatConfig.load_standalone_bsc:FCChatConfig.load_integrated_bsc));</script>
+<script>
+function clear_popup_header(){
+	var v = jGo.$('#popup_box_header')[0];
+	v.style.display="none";
+}
+function set_popup_header(txt){
+var v = jGo.$('#popup_box_header')[0];
+v.style.display="block";
+v.innerHTML=txt;
+jGo.$(v).css({"top": ( jGo.$(window).height() - jGo.$(v).height() ) / 2+jGo.$(window).scrollTop() - 120 + "px","left": ( jGo.$(window).width() - jGo.$(v).width() ) / 2+jGo.$(window).scrollLeft() + "px"});
+}
+</script>
+</body></html>

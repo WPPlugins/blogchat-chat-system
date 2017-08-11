@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> <HTML>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<HEAD>
+<meta name="viewport" content="width=device-width, initial-scale=.5">
+<SCRIPT TYPE="text/javascript">
+<!--
+var fc_chat_path = "";
+var fcchat_domain = "admin";
+document.documentElement.style.overflow= 'auto';
+
+function numbersonly(myfield, e, dec)
+{
+var key;
+var keychar;
+
+if (window.event)
+   key = window.event.keyCode;
+else if (e)
+   key = e.which;
+else
+   return true;
+keychar = String.fromCharCode(key);
+
+// control keys
+if ((key==null) || (key==0) || (key==8) || 
+    (key==9) || (key==13) || (key==27) )
+   return true;
+
+// numbers
+else if ((("0123456789").indexOf(keychar) > -1))
+   return true;
+
+// decimal point jump
+else if (dec && (keychar == "."))
+   {
+   myfield.form.elements[dec].focus();
+   return false;
+   }
+else
+   return false;
+}
+//-->
+</SCRIPT>
+<!-- Begin Fastcat Header Insert -->
+<script type="text/javascript" src="../js/import.google.loader.js"></script>
+<script type="text/javascript" src="../js/import.config.js"></script>
+
+<script type="text/javascript">
+//Proxy config
+if(FCChatConfig['proxy_type']){
+document.write("<script type='text/javascript' src='../proxies/" + FCChatConfig['proxy_type'] + "_config_proxy.php'></" + "script>");
+}
+</script>
+<script type="text/javascript" src="../js/import.libs.js"></script>
+
+<script type="text/javascript">
+
+//turn off blogchat
+FCChatConfig.blog=false;
+
+//toolbar items
+FCChatConfig.toolbar_items=["fullpage:logo","friendscenter"];
+FCChatConfig.large_device_toolbar_items=["friendscenter"];
+FCChatConfig.small_device_toolbar_items=["friendscenter"];
+
+</script>
+<script type="text/javascript" src="../js/import.includes.js"></script>
+
+<script type="text/javascript">
+<!--
+	//Page Level Configuration
+	jGo.fcchat_toolbar.config.show=true;
+	jGo.fcchat_toolbar.config.layout=0;
+	
+	if(jGo.mobile){
+		FCChatConfig.pinned_by_default=false;
+		jGo.fcchat_toolbar.config.fixed=0;
+		jGo.fcchat_toolbar.config.mode=0;
+		jGo.fcchat_toolbar.config.position='topleft';
+		jGo.fcchat_toolbar.config.noclose=true;
+	}else{
+		jGo.fcchat_toolbar.config.position='bottomright';
+	}
+	
+	FCChatConfig.default_on=true;
+	FCChatConfig.control_visible=false;
+	FCChatConfig.toolbar_default_display=1; 
+	FCChatConfig.static_banner_offset_top=0;
+	FCChatConfig.alignment="left";
+	FCChatConfig.startText="&nbsp;Please exit the administration panel and sign in again.&nbsp;&nbsp; <a href='"+FCChatConfig.dir+"html/ChatHelp.html'>Chat Help</a></b>";
+//-->
+</script>
+<!-- /End Fastcat Header Insert -->
+
+<style>
+<!--
+
+html,body { height: 100%; margin: 0px; padding: 0px; background-color:#f9f9f9}
+
+small { FONT-SIZE: 9pt; font-family:Arial,  Helvetica;}
+
+.scroll {
+-moz-overflow-scrolling: touch;-webkit-overflow-scrolling: touch;overflow-scrolling: touch;
+}
+
+td.d { FONT-SIZE: 9pt; font-family:Arial,  Helvetica; COLOR: #000000; BORDER-bottom: 1px solid #aaaaaa;}
+//-->
+</style>
+<TITLE>BLOGCHAT Administration</TITLE>
+</HEAD>
+<body style='FONT-SIZE: 9pt;font-family:arial'>
+<!-- Begin Fastcat Body Insert -->
+<script type="text/javascript" src="../js/install.prep.adv.js"></script><script type="text/javascript" src="../js/embed.js"></script>
+<!-- /End Fastcat Body Insert -->
+
+<div style='margin-top:5px;margin-left:15px;font-weight:bold;width:700px;'><img src='../current_skin/fastcatlogo.gif'>&nbsp;BlogChat Administration&nbsp;&nbsp;&nbsp;&nbsp;<span id='open_win' style='color:#aaaaaa;font-weight:bold'>Open ChatCenter Administration Window</span></div>
+<div style='width:1600px;margin:7px;padding:10px;border:1px solid #dddddd;'>
+<div style='display:inline-block;top:0px;height:910px;vertical-align:top;margin:7px;padding:10px;border:1px solid #dddddd;background-color:#F6f6f6;-moz-border-radius: 5px;-webkit-border-radius:5px;border-radius:5px'>
+	<table border=0 style="font-family:arial;font-size:9pt;width:400px">
+		<tr><td colspan=2>
+			<span style='color:darkblue;font-weight:bold;font-style:italic;margin-top:10px'>
+					Search Results
+			</span>
+			<div class='scroll' id='searchframe' style='border:1px solid #aaaaaa;height:295px;width:400px;background-color:white;overflow:auto'>
+			</div>		
+		</td></tr>
+		<tr>
+			<td colspan=2>
+				<span style='color:darkblue;font-weight:bold;font-style:italic'>
+					Search:<hr style='width:100%;color:lightblue;'>
+				</span>
+			</td>
+		</tr>
+		<tr><td>
+			<form name='frm1' OnSubmit='fc_chat.search(-1,1);return false;'>
+				<input type='text' id='searchtext' style='width:100px;'>
+				<br><small>(Search Users)</small><br>
+			</form>
+		</td><td>
+			<form>
+			<select id='searchoptions' name='SearchOptions' Onchange='fc_chat.search(this.selectedIndex,1)' style='margin-top:0px' size='1'>
+				<option selected value>
+				<option value='1'>Show all users
+				<option value='2'>Show globally blocked users
+				<option value='3'>Show users blocked from private chat
+				<option value='4'>Show auto-blocked users
+				<option value='5'>Show users blocked in current room
+				<option value='6'>Show blocked IP's (Admin Only)
+				<option value='7'>Show Moderators
+				<option value='8'>Show Administrators
+				<option value='9'>Show Chat Text Filter (Admin Only)
+				<option value='10'>Show Screen Name Filter (Admin Only)
+			</select>
+			<br><small>(Search Queries)</small>
+			</form>
+		</td></tr>
+		
+		<tr><td colspan=2>
+			<span style='color:darkblue;font-weight:bold;font-style:italic'>
+					User Records
+			</span>
+			<div class='scroll' id='userframe' style='border:1px solid #aaaaaa;height:295px;width:400px;background-color:white;overflow:auto'>
+			
+</div>
+		</td></tr>
+	</table></div>
+	<div id='leftframecover' style='position:absolute;background-color:gray;display:none;left:5px;top:5px;width:416px;height:571px;filter:alpha(opacity=1); -moz-opacity:.01; opacity:.01;'>
+	</div>
+<div style='display:inline-block;height:910px;vertical-align:top;margin:7px;padding:10px;border:1px solid #dddddd;background-color:#F6F6F6;-moz-border-radius: 5px;-webkit-border-radius:5px;border-radius:5px'>
+<table border=0 style='top:10px;width:400px;font-family:arial;font-size:9pt'>
+	<tr>
+		<td colspan=4>
+			<span style='color:darkblue;font-weight:bold;font-style:italic'>
+					Block IP:<hr style='width:100%;color:lightblue;'>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=4>
+				<input id='ip1' type='text' size='3' maxlength='3' onKeyPress="return numbersonly(this, event)"><b> . </b><input id='ip2' type='text' size='3' maxlength='3' onKeyPress="return numbersonly(this, event)"><b> . </b><input id='ip3' type='text' size='3' maxlength='3' onKeyPress="return numbersonly(this, event)"><b> . </b><input id='ip4' type='text' size='3' maxlength='3' onKeyPress="return numbersonly(this, event)">&nbsp;<input id='bip' type='button' name='bip' value='Block IP' disabled Onclick='fc_chat.adminBlockIPButton()'>
+		</td>
+	</tr>
+	
+	<tr>
+		<td colspan=4>
+			<span style='color:darkblue;font-weight:bold;font-style:italic'>
+					Add word/phrase to chat text filter:<hr style='width:100%;color:lightblue;'>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<form name='frm2' OnSubmit='fc_chat.addToWordFilter("filterchat");return false;'>
+				<input type='text' id='filterchat' disabled  style='margin-top:0px;width:100;'>
+			</form>
+		</td>
+		<td colspan=3>&nbsp;<small>(50 chars max)</small>
+		<br>&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td colspan=4>
+			<span style='color:darkblue;font-weight:bold;font-style:italic'>
+					Add word/phrase to screen name filter:<hr style='width:100%;color:lightblue;'>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<form name='frm2' OnSubmit='fc_chat.addToWordFilter("filteruser");return false;'>
+				<input type='text' id='filteruser' disabled  style='margin-top:0px;width:100;'>
+			</form>
+		</td>
+		<td colspan=3>&nbsp;<small>(50 chars max)</small>
+		<br>&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td colspan=4>
+			<span style='color:darkblue;font-weight:bold;font-style:italic'>
+				Reboot Chat:<hr style='width:100%;color:lightblue;'>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=4>
+			<input id='reboot' type='button' name='reboot' value='Reboot' disabled Onclick='fc_chat.adminReboot(0)'>
+			<br>&nbsp;
+		</td>
+	</tr>
+	<tr>
+			<td colspan=4>
+				<span style='color:darkblue;font-weight:bold;font-style:italic'>
+						Update Select Server Configuration Variables:<hr style='width:100%;color:lightblue;'>
+				</span>
+			</td>
+		</tr>
+		<tr>	
+			<td >
+				Guest Names
+			</td>
+			<td>
+				<select id='configvalue5' name='configvalue5' style='margin-top:0px' size='1'>
+					<option selected value></option>
+					<option value=0>None</option>
+					<option value=1>Common English Names</option>
+					<option value=2>WOW Names</option>
+					<option value=3>Elf Names</option>
+					<option value=4>Pet Names</option>
+					<option value=5>Mixed</option>
+				</select>
+			</td>
+			<td>
+				<input id='setconfigvalue5' type='button' name='setconfigvalue5' value='Set' disabled Onclick='fc_chat.adminUpdateConfigField(5)'>
+			</td>
+			<td width=300px>
+			</td>
+		</tr>
+		<tr>	
+			<td>
+				Show Typing 
+			</td>
+			<td>
+				<select id='configvalue0' name='configvalue0' style='margin-top:0px' size='1'>
+					<option selected value></option>
+					<option value=1>no</option>
+					<option value=2>yes</option>
+				</select>
+			</td>
+			<td>
+				<input id='setconfigvalue0' type='button' name='setconfigvalue0' value='Set' disabled Onclick='fc_chat.adminUpdateConfigField(0)'>
+			</td>
+			<td width=300px>
+			</td>
+		</tr>
+		<tr>	
+			<td>
+				Use Avatars
+			</td>
+			<td>
+				<select id='configvalue1' name='configvalue1' style='margin-top:0px' size='1'>
+					<option selected value></option>
+					<option value=1>no</option>
+					<option value=2>yes</option>
+				</select>
+			</td>
+			<td >
+				<input id='setconfigvalue1' type='button' name='setconfigvalue1' value='Set' disabled Onclick='fc_chat.adminUpdateConfigField(1)'>
+			</td>
+			<td width=100%>
+			</td>
+		</tr>
+		<tr>	
+			<td>
+				Show 50 Newest Messages
+			</td>
+			<td>
+				<select id='configvalue2' name='configvalue2' style='margin-top:0px' size='1'>
+					<option selected value></option>
+					<option value=1>no</option>
+					<option value=2>yes</option>
+				</select>
+			</td>
+			<td >
+				<input id='setconfigvalue2' type='button' name='setconfigvalue2' value='Set' disabled Onclick='fc_chat.adminUpdateConfigField(2)'>
+			</td >
+			<td width=100%>
+			</td>
+		</tr>
+		<tr>	
+			<td colspan=4>
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan=4>
+				<span style='color:darkblue;font-weight:bold;font-style:italic'>
+						User Integration:&nbsp;&nbsp;&nbsp;&nbsp;<small><a target=_blank href='http://www.fastcatsoftware.com/chat/userguide/index.html'>Tutorials</a></small></br><hr style='width:100%;color:lightblue;'>
+				</span>
+			</td>
+		</tr>
+		<tr>	
+			<td>
+				Set secret key
+			</td>
+			<td width=100%>
+				<form name='frm6' OnSubmit='fc_chat.adminUpdateConfigField(3);return false;'>
+					<input type='text' id='configvalue3' maxLength='512'  style='margin-top:0px;width:150px;'>
+				</form>
+			</td>
+		</tr>
+		<tr>	
+			<td colspan=4>
+				<hr style='width:100%;color:lightblue;'>
+			</td>
+		</tr>
+		<tr>	
+			<td >
+				CMS Type:
+			</td>
+			<td>
+				<select id='configvalue4' name='configvalue4' style='margin-top:0px' size='1'>
+					<option selected value></option>
+					<option value=1>wordpress</option>
+					<option value=2>wordpress2</option>
+					<option value=3>phpbb</option>
+					<option value=4>smf</option>
+					<option value=5>drupal</option>
+					<option value=6>joomla</option>
+					<option value=7>mybb</option>
+				</select>
+			</td>
+			</tr>
+		<tr>
+			<td>
+				Administrative Account:
+			</td>
+			<td>
+					<input type='text' id='adminname' maxLength='512'  style='margin-top:0px;width:150px;'>
+			</td>
+			<td>
+				<input id='setconfigvalue4' type='button' name='setconfigvalue4' value='Set' disabled Onclick='fc_chat.adminUpdateConfigField(4)'>
+			</td >
+		</tr>
+		<tr>	
+			<td colspan=4>
+				<hr style='width:100%;color:lightblue;'>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<script>document.write("<a href='admin.html?chatid="+FCChatConfig.chat_id+"&host="+FCChatConfig.host+"'>Switch Administrator</a>");</script>
+			</td>
+		<tr>
+</table>
+
+</div>
+<div style='display:inline-block;height:910px;vertical-align:top;margin:7px;padding:10px;border:1px solid #dddddd;background-color:#F6F6F6;-moz-border-radius: 5px;-webkit-border-radius:5px;border-radius:5px'>
+	<table border=0 style="font-family:arial;font-size:9pt;width:640px;">
+		<tr><td colspan=3>
+			<div style='color:darkblue;font-weight:bold;font-style:italic;'>
+					File Editor
+			</div>
+			<iframe frameborder='0' src="file_editor.php" style="width:640px;height:380px;border:1px solid gray;background-color:#F6F6F6">
+  				<p>Your browser does not support iframes.</p>
+			</iframe>
+		</td></tr>
+		<tr><td colspan=3>
+			<div style='color:darkblue;font-weight:bold;font-style:italic;'>
+					View Server Configuration
+			</div>
+			<div id='configfile' style='padding:5px;border:1px solid #aaaaaa;height:150px;width:630px;background-color:white;overflow:auto'>
+			</div>
+		</td></tr>
+		<tr>
+			<td colspan=3>
+				<span style='color:darkblue;font-weight:bold;font-style:italic'>
+					<input id='getconfig' type='button' name='getconfig' disabled value='Read/Refresh Config File'  Onclick='fc_chat.adminGetConfig()'>
+				</span>
+				<br><br>
+			</td>
+		</tr>
+	</table></div>
+</div>
+<script type="text/javascript" src="../jGo/js/jGo.DefaultWindow.init.min.js"></script><script type="text/javascript" src="../jGo/js/jGo.c.min.js"></script><script type="text/javascript" src="../jGo/js/jGo.MD5.min.js"></script>
+<script language="JavaScript" src="../js/fcchat.moderation.min.js"></script>
+<script>
+<!-- Page Config
+	document.getElementById('bip').disabled = true;
+    document.getElementById('getconfig').disabled = true;
+    document.getElementById('setconfigvalue0').disabled = true;
+    document.getElementById('setconfigvalue5').disabled = true;
+    document.getElementById('setconfigvalue4').disabled = true;
+    document.getElementById('setconfigvalue1').disabled = true;
+    document.getElementById('setconfigvalue2').disabled = true;
+    document.getElementById('configvalue3').disabled = true;
+    document.getElementById('searchtext').disabled = true;
+    document.getElementById('searchoptions').disabled = true;
+    document.getElementById('filterchat').disabled = true;
+    document.getElementById('filteruser').disabled = true;
+    document.getElementById('reboot').disabled = true;
+-->
+</script>
+</BODY>
+</HTML>

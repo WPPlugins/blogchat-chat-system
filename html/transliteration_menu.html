@@ -1,0 +1,126 @@
+<html><title>Transliteration Service</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi">
+    </script>
+    <script type="text/javascript">
+	    var transliterationControl;
+	    var currlanguage;
+	    var currlang=null;
+		var t1;
+		var languageCalled=false;
+		
+	    // Load the Google Transliterate API
+	    google.load("elements", "1", {
+	          packages: "transliteration"
+	        });
+	    
+        function onLoad() {
+	        var options = {
+	            sourceLanguage: 'en',
+	            destinationLanguage: ['ar','hi','kn','ml','ta','te'],
+	            transliterationEnabled: true,
+	            shortcutKey: 'ctrl+g'
+        	};
+
+	        // Populate the languages area
+			var fill='';
+	        var supportedDestinationLanguages = google.elements.transliteration.getDestinationLanguages(
+	            google.elements.transliteration.LanguageCode.ENGLISH);
+	        for (var lang in supportedDestinationLanguages) {
+	        	fill += '<a href="javascript:languageChangeHandler(\''+lang+'\',\''+supportedDestinationLanguages[lang]+'\')" style="text-decoration:none">'+lang+'</a>&nbsp;&nbsp; ';
+	        }
+	        document.getElementById('translControl').innerHTML=fill;
+	    };
+	    
+	    // Handler for disabling transliteration
+		function disableTransliteration() {
+			currlang=null;
+			//if(languageCalled){
+			if(window.opener.fc_chat.transliterator){
+				window.opener.fc_chat.currlang='ru';
+				window.opener.fc_chat.setLang();
+				window.opener.fc_chat.currlang=null;
+				window.opener.fc_chat.transliterator.disableTransliteration()
+			}
+			document.getElementById("info").style.display="block";
+			document.getElementById("info").innerHTML="<b>" + window.opener.fc_chat.textSetter(309,'Transliteration is off.')+"</b>";
+			//}
+		};
+	
+        // Handler for dropdown option change event.  Calls setLanguagePair to
+        // set the new language.
+	    function languageChangeHandler(language,lang){
+			currlanguage=language;
+			currlang=lang;
+			if(window.opener&&window.opener.fc_chat&&window.opener.fc_chat.transliterator){
+				window.opener.fc_chat.transliterator.enableTransliteration();
+				window.opener.fc_chat.makeTransliteratable();
+				clearTimeout(t1);
+				t1 = setTimeout("changeLang('"+lang+"')",200);
+				document.getElementById("info").style.display="block";
+				document.getElementById("info").innerHTML="<b>"+language + window.opener.fc_chat.textSetter(308,' selected. When you type your chats, use the space bar to transliterate words. Press Ctrl+g to toggle the transliteration service on and off.<br><br>The transliteration service will remain in effect while this window is open.')+ "</b>";
+				languageCalled=true;
+		        	
+			}else{
+				clearTimeout(t1);
+				t1 = setTimeout("languageChangeHandler('"+language+"','"+lang+"')",200);
+			}
+	    };
+	    
+	    //change language helper
+		function changeLang(lang){
+			if(window.opener.fc_chat.transliterator){
+				window.opener.fc_chat.currlang=lang;
+				window.opener.fc_chat.setLang();
+			}
+		};
+		
+		//Poll the main window
+		function poll(){
+			try{
+			if(window.opener&&window.opener.fc_chat&&window.opener.fc_chat.transliteration[0]==0){
+				trlit();
+				if(currlang){
+					window.opener.fc_chat.currlang=currlang;
+					clearTimeout(t1);
+					t1 = setTimeout("languageChangeHandler('"+currlanguage+"','"+currlang+"')",200);
+				}
+			}
+			}catch(e){}
+			setTimeout("poll()",2000);
+		};
+		var trlit = function(){
+			window.opener.fc_chat.trlit();
+		};
+	    google.setOnLoadCallback(onLoad);
+	    $(window).unload(function() {
+	    	  disableTransliteration();
+	    	  alert("Transliteration disabled");
+	    	});
+	    poll();
+    </script>
+	<style>
+		*{
+			margin:0;
+			-webkit-user-select: none;
+			font-family: arial;
+		}
+		
+		a.button{
+			font-size:16px;
+			text-decoration:none;
+			background:darkblue;
+			color:#fff;
+			padding:5px;
+		 }
+	</style>
+  </head>
+  <body style='padding:10px'>
+    <div style='padding:5px;background-color:darkred;color:white;font-family:arial;font-size:16px;'><b><script>document.write(window.opener.fc_chat.textSetter(307,'Select Language to type in:'));</script></b></div><br><br>
+    <div id='translControl' style='padding:10px;line-height:200%;font-family:arial;font-size:16px;margin-top:20px'></div><br>
+	<div id='info' style='display:none;padding:10px;font-family:arial;font-size:16px;margin-top:20px'></div>
+    <a href="javascript:disableTransliteration()" class="button" style='position:absolute;left:10px;top:420px;font-family:arial;font-size:16px;'><b><script>document.write(window.opener.fc_chat.textSetter(310,'Transliteration Off'));</script></b></div>
+  </body>
+</html>
